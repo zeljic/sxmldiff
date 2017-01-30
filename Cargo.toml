@@ -1,0 +1,9 @@
+[package]
+name = "sxmldiff"
+version = "0.1.0"
+authors = ["Đorđe Zeljić <zeljic@gmail.com>"]
+description = "Simple XML comparison tool."
+
+[dependencies]
+getopts = "0.2.14"
+ansi_term = "0.9.0"
