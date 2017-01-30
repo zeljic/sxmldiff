@@ -9,9 +9,12 @@ rust:
 os:
   - linux
 
+dist: trusty
+
 before_script:
   - gcc -v
   - rustc -V
+  - cargo -V
 
 script:
   - cargo build --release --verbose
