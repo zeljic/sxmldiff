@@ -1,0 +1,15 @@
+language: rust
+sudo: false
+rust:
+  - stable
+  - nightly
+
+os:
+  - linux
+  - osx
+
+script:
+  - cargo build --verbose
+  - cargo test
+  - cargo build --verbose --release
+  - cargo test
