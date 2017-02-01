@@ -9,19 +9,8 @@ rust:
 os:
   - linux
 
-dist: xenial
-
-before_script:
-  - gcc -v
-  - rustc -V
-  - cargo -V
+dist: trusty
 
 script:
   - cargo build --release --verbose
-  - cargo test --release
-
-addons:
-  apt:
-    packages:
-      - gcc-6
-      - g++-6
+  
