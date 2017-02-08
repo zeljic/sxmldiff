@@ -61,7 +61,11 @@ pub fn log(level: LogLevel, content: &str) -> String {
         LogLevel::ERROR => ansi_term::Colour::Red.paint("[ERROR]"),
     };
 
-    format!("{} {}", &prefix, &content)
+    format!("{} {}", &prefix, content)
+}
+
+pub fn log_print(level: LogLevel, content: &str) {
+    println!("{}", log(level, content));
 }
 
 pub fn repeat_char(c: char, times: usize) -> String {

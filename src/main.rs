@@ -1,9 +1,15 @@
 extern crate getopts;
+extern crate xmltree;
 
 mod utils;
 
 use getopts::{Options, Matches};
 use std::env;
+use xmltree::Element;
+
+use utils::{log_print, LogLevel};
+
+fn compare_nodes(el_x: &Element, el_y: &Element) {}
 
 fn main() {
 
@@ -48,4 +54,22 @@ fn main() {
             return;
         }
     };
+
+    let el_x: Element = match Element::parse(content_x.as_bytes()) {
+        Ok(el) => el,
+        Err(_) => {
+            log_print(LogLevel::ERROR, "Unable to parse XML document.");
+            return;
+        }
+    };
+
+    let el_y: Element = match Element::parse(content_y.as_bytes()) {
+        Ok(el) => el,
+        Err(_) => {
+            log_print(LogLevel::ERROR, "Unable to parse XML document.");
+            return;
+        }
+    };
+
+    compare_nodes(&el_x, &el_y);
 }
