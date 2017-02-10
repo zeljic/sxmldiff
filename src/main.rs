@@ -9,7 +9,6 @@ use xmltree::Element;
 
 use utils::{log_print, LogLevel};
 
-use std::io;
 use std::cmp::Ordering::*;
 
 #[derive(Debug)]
@@ -53,7 +52,7 @@ impl<'tag> Tag<'tag> {
             ret_val.attrs.push(attr);
         }
 
-        if ret_val.attrs.len() > 0 {
+        if !ret_val.attrs.is_empty() {
             ret_val.attrs.sort_by(|x, y| if x.key > y.key {
                 Greater
             } else if x.key < y.key {
@@ -82,13 +81,14 @@ impl<'tag> Tag<'tag> {
     }
 }
 
-fn compare_nodes(el_x: &Element, el_y: &Element) {
+fn compare_nodes(el_x: &Element, el_y: &Element, indent: &mut usize) {
 
-    let mut tag_x: Tag = Tag::new(el_x);
+    let tag_x: Tag = Tag::new(el_x);
+    println!("{}", tag_x.print());
 
-    if el_x.children.len() > 0 {
+    if !el_x.children.is_empty() {
         for child in &el_x.children {
-            compare_nodes(child, child);
+            compare_nodes(child, child, indent);
         }
     } else {
 
@@ -155,5 +155,7 @@ fn main() {
         }
     };
 
-    compare_nodes(&el_x, &el_y);
+    let mut indent: usize = 0;
+
+    compare_nodes(&el_x, &el_y, &mut indent);
 }
