@@ -1,6 +1,9 @@
 language: rust
-cache: cargo
 sudo: false
+cache:
+  - directories:
+    - $TRAVIS_BUILD_DIR/target
+    - $HOME/.cargo
 
 rust:
   - stable
