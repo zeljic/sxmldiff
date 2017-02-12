@@ -9,9 +9,9 @@ use xmltree::Element;
 
 use utils::{log_print, LogLevel};
 
-use std::cmp::Ordering::*;
+use std::cmp::{Ord, Ordering};
 
-#[derive(Debug)]
+#[derive(Debug, Eq, PartialEq, PartialOrd)]
 struct Attr<'attr> {
     key: &'attr str,
     value: &'attr str,
@@ -19,17 +19,20 @@ struct Attr<'attr> {
 
 impl<'attr> Attr<'attr> {
     fn new(data: (&'attr str, &'attr str)) -> Attr<'attr> {
-
-        let ret_val: Attr<'attr> = Attr {
+        Attr {
             key: data.0,
             value: data.1,
-        };
-
-        return ret_val;
+        }
     }
 
     fn print(&self) -> String {
         format!("{}=\"{}\"", self.key, self.value)
+    }
+}
+
+impl<'attr> Ord for Attr<'attr> {
+    fn cmp(&self, rhs: &Attr<'attr>) -> Ordering {
+        self.key.cmp(rhs.key)
     }
 }
 
@@ -52,15 +55,7 @@ impl<'tag> Tag<'tag> {
             ret_val.attrs.push(attr);
         }
 
-        if !ret_val.attrs.is_empty() {
-            ret_val.attrs.sort_by(|x, y| if x.key > y.key {
-                Greater
-            } else if x.key < y.key {
-                Less
-            } else {
-                Equal
-            });
-        }
+        ret_val.attrs.sort();
 
         ret_val
     }
