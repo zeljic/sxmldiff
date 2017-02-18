@@ -42,6 +42,15 @@ struct Tag<'tag> {
     attrs: Vec<Attr<'tag>>,
 }
 
+impl<'tag> PartialEq for Tag<'tag> {
+    fn eq(&self, rhs: &Tag<'tag>) -> bool {
+        match self.el.text {
+            Some(_) => self.el.text == rhs.el.text,
+            None => self.el.name == rhs.el.name && self.attrs == rhs.attrs,
+        }
+    }
+}
+
 impl<'tag> Tag<'tag> {
     fn new(el: &'tag Element) -> Tag<'tag> {
 
