@@ -81,22 +81,57 @@ impl<'tag> Tag<'tag> {
 
         ret_val.push_str(">");
 
+        if let Some(ref text) = self.el.text {
+            ret_val.push_str(text);
+            ret_val.push_str(&format!("</{}>", self.el.name));
+        }
+
         ret_val
+    }
+
+    fn print_end(&self) -> Option<String> {
+        if self.el.text.is_none() {
+            Some(format!("</{}>", self.el.name))
+        } else {
+            None
+        }
     }
 }
 
-fn compare_nodes(el_x: &Element, el_y: &Element, indent: &mut usize) {
+fn print_diff(tag_x: &Tag, tag_y: &Tag, indent: &mut usize) -> String {
+    "".into()
+}
 
-    let tag_x: Tag = Tag::new(el_x);
-    println!("{}", tag_x.print());
+fn compare_nodes<'cn>(tag_x: &Tag<'cn>, tag_y: &Tag<'cn>, indent: &mut usize) {
 
-    if !el_x.children.is_empty() {
-        for child in &el_x.children {
-            compare_nodes(child, child, indent);
+    if tag_x == tag_y {
+        let indent_str = utils::repeat_char(' ', *indent);
+        let start_tag = tag_x.print();
+        let end_tag = tag_x.print_end();
+
+        *indent += 2;
+
+        println!("{}{}", indent_str, start_tag);
+
+        for child_x in &tag_x.el.children {
+            let tag_child_x: Tag = Tag::new(child_x);
+
+            match tag_y.el.children.iter().find(|e| e.name == child_x.name) {
+                Some(el) => compare_nodes(&tag_child_x, &Tag::new(el), indent),
+                None => {}
+            }
         }
-    } else {
 
+        if let Some(v) = end_tag {
+            println!("{}{}", indent_str, v)
+        }
+
+        *indent -= 2;
+
+    } else {
+        print_diff(tag_x, tag_y, indent);
     }
+
 }
 
 fn main() {
@@ -161,5 +196,5 @@ fn main() {
 
     let mut indent: usize = 0;
 
-    compare_nodes(&el_x, &el_y, &mut indent);
+    compare_nodes(&Tag::new(&el_x), &Tag::new(&el_y), &mut indent);
 }
