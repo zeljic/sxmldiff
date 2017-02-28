@@ -1,11 +1,13 @@
 extern crate getopts;
 extern crate xmltree;
+extern crate ansi_term;
 
 mod utils;
 
 use getopts::{Options, Matches};
 use std::env;
 use xmltree::Element;
+use ansi_term::Color;
 
 use utils::{log_print, LogLevel};
 
@@ -53,7 +55,6 @@ impl<'tag> PartialEq for Tag<'tag> {
 
 impl<'tag> Tag<'tag> {
     fn new(el: &'tag Element) -> Tag<'tag> {
-
         let mut ret_val: Tag<'tag> = Tag {
             el: el,
             attrs: Vec::new(),
@@ -69,8 +70,9 @@ impl<'tag> Tag<'tag> {
         ret_val
     }
 
-    fn print(&self) -> String {
-        let mut ret_val: String = String::from("<");
+    fn print(&self, indent: &usize) -> String {
+        let mut ret_val: String = utils::repeat_char(' ', *indent);
+        ret_val.push('<');
 
         ret_val.push_str(&self.el.name);
 
@@ -89,53 +91,66 @@ impl<'tag> Tag<'tag> {
         ret_val
     }
 
-    fn print_end(&self) -> Option<String> {
-        if self.el.text.is_none() {
-            Some(format!("</{}>", self.el.name))
+    fn print_end(&self, indent: &usize) -> Option<String> {
+        if !self.has_text() {
+            Some(format!("{}</{}>", utils::repeat_char(' ', *indent), self.el.name))
         } else {
             None
         }
     }
+
+    fn has_text(&self) -> bool {
+        !self.el.text.is_none()
+    }
+
+    fn print_diff(&self, indent: &usize) -> String {
+        let i: usize = *indent - 1;
+
+        format!("{}{}\n{}",
+                Color::Green.paint("|"),
+                &self.print(&i),
+                Color::Red.paint("|"))
+    }
 }
 
-fn print_diff(tag_x: &Tag, tag_y: &Tag, indent: &mut usize) -> String {
-    "".into()
-}
+fn compare_nodes<'cn>(tag_x: &Tag<'cn>, tag_y: &Tag<'cn>, indent: &'cn mut usize) {
 
-fn compare_nodes<'cn>(tag_x: &Tag<'cn>, tag_y: &Tag<'cn>, indent: &mut usize) {
+    let start_tag = tag_x.print(indent);
+    let end_tag = tag_x.print_end(indent);
 
-    if tag_x == tag_y {
-        let indent_str = utils::repeat_char(' ', *indent);
-        let start_tag = tag_x.print();
-        let end_tag = tag_x.print_end();
+    *indent += 2;
 
-        *indent += 2;
+    println!("{}", start_tag);
 
-        println!("{}{}", indent_str, start_tag);
+    for child_x in &tag_x.el.children {
+        let tag_child_x: Tag = Tag::new(child_x);
+        let mut found: bool = false;
 
-        for child_x in &tag_x.el.children {
-            let tag_child_x: Tag = Tag::new(child_x);
+        for child_y in &tag_y.el.children {
+            let tag_child_y: Tag = Tag::new(child_y);
 
-            match tag_y.el.children.iter().find(|e| e.name == child_x.name) {
-                Some(el) => compare_nodes(&tag_child_x, &Tag::new(el), indent),
-                None => {}
+            if tag_child_x == tag_child_y {
+                found = true;
+
+                compare_nodes(&tag_child_x, &tag_child_y, indent);
+
+                break;
             }
         }
 
-        if let Some(v) = end_tag {
-            println!("{}{}", indent_str, v)
+        if !found {
+            println!("{}", tag_child_x.print_diff(indent));
         }
-
-        *indent -= 2;
-
-    } else {
-        print_diff(tag_x, tag_y, indent);
     }
 
+    if let Some(v) = end_tag {
+        println!("{}", v)
+    }
+
+    *indent -= 2;
 }
 
 fn main() {
-
     let args: Vec<String> = env::args().collect();
     let program: String = args[0].clone();
 
@@ -195,6 +210,12 @@ fn main() {
     };
 
     let mut indent: usize = 0;
+    let tag_x: Tag = Tag::new(&el_x);
+    let tag_y: Tag = Tag::new(&el_y);
 
-    compare_nodes(&Tag::new(&el_x), &Tag::new(&el_y), &mut indent);
+    if tag_x == tag_y {
+        compare_nodes(&tag_x, &tag_y, &mut indent);
+    } else {
+        tag_x.print_diff(&indent);
+    }
 }
