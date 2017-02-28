@@ -17,16 +17,14 @@ impl std::fmt::Display for UtilsErrors {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         match *self {
             UtilsErrors::IoOpen(ref path) => {
-                let str: String = log(&LogLevel::ERROR,
-                                      format!("Unable to open file {}", path).as_str());
-
-                write!(f, "{}", &str)
+                write!(f,
+                       "{}",
+                       log(&LogLevel::ERROR, &format!("Unable to open file {}", path)))
             }
             UtilsErrors::IoRead(ref path) => {
-                let str: String = log(&LogLevel::ERROR,
-                                      format!("Unable to read file {}", path).as_str());
-
-                write!(f, "{}", &str)
+                write!(f,
+                       "{}",
+                       log(&LogLevel::ERROR, &format!("Unable to read file {}", path)))
             }
         }
     }
