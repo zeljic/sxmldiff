@@ -194,7 +194,7 @@ fn main() {
     let el_x: Element = match Element::parse(content_x.as_bytes()) {
         Ok(el) => el,
         Err(_) => {
-            log_print(LogLevel::ERROR, "Unable to parse XML document.");
+            log_print(&LogLevel::ERROR, "Unable to parse XML document.");
             return;
         }
     };
@@ -202,7 +202,7 @@ fn main() {
     let el_y: Element = match Element::parse(content_y.as_bytes()) {
         Ok(el) => el,
         Err(_) => {
-            log_print(LogLevel::ERROR, "Unable to parse XML document.");
+            log_print(&LogLevel::ERROR, "Unable to parse XML document.");
             return;
         }
     };

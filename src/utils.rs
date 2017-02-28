@@ -17,13 +17,13 @@ impl std::fmt::Display for UtilsErrors {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         match *self {
             UtilsErrors::IoOpen(ref path) => {
-                let str: String = log(LogLevel::ERROR,
+                let str: String = log(&LogLevel::ERROR,
                                       format!("Unable to open file {}", path).as_str());
 
                 write!(f, "{}", &str)
             }
             UtilsErrors::IoRead(ref path) => {
-                let str: String = log(LogLevel::ERROR,
+                let str: String = log(&LogLevel::ERROR,
                                       format!("Unable to read file {}", path).as_str());
 
                 write!(f, "{}", &str)
@@ -53,9 +53,9 @@ pub enum LogLevel {
     ERROR,
 }
 
-pub fn log(level: LogLevel, content: &str) -> String {
+pub fn log(level: &LogLevel, content: &str) -> String {
 
-    let prefix = match level {
+    let prefix = match *level {
         LogLevel::INFO => ansi_term::Colour::White.paint("[INFO]"),
         LogLevel::WARNING => ansi_term::Colour::Yellow.paint("[WARNING]"),
         LogLevel::ERROR => ansi_term::Colour::Red.paint("[ERROR]"),
@@ -64,7 +64,7 @@ pub fn log(level: LogLevel, content: &str) -> String {
     format!("{} {}", &prefix, content)
 }
 
-pub fn log_print(level: LogLevel, content: &str) {
+pub fn log_print(level: &LogLevel, content: &str) {
     println!("{}", log(level, content));
 }
 
