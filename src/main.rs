@@ -104,11 +104,9 @@ impl<'tag> Tag<'tag> {
     }
 
     fn print_diff(&self, indent: &usize) -> String {
-        let i: usize = *indent - 1;
-
         format!("{}{}\n{}",
                 Color::Green.paint("|"),
-                &self.print(&i),
+                &self.print(&if *indent > 0 { *indent - 1 } else { 0 }),
                 Color::Red.paint("|"))
     }
 }
