@@ -71,7 +71,7 @@ impl<'tag> Tag<'tag> {
     }
 
     fn print(&self, indent: &usize) -> String {
-        let mut ret_val: String = utils::repeat_char(' ', *indent);
+        let mut ret_val: String = " ".repeat(*indent);
         ret_val.push('<');
 
         ret_val.push_str(&self.el.name);
@@ -93,7 +93,7 @@ impl<'tag> Tag<'tag> {
 
     fn print_end(&self, indent: &usize) -> Option<String> {
         if !self.has_text() {
-            Some(format!("{}</{}>", utils::repeat_char(' ', *indent), self.el.name))
+            Some(format!("{}</{}>", " ".repeat(*indent), self.el.name))
         } else {
             None
         }
@@ -112,7 +112,6 @@ impl<'tag> Tag<'tag> {
 }
 
 fn compare_nodes<'cn>(tag_x: &Tag<'cn>, tag_y: &Tag<'cn>, indent: &'cn mut usize) {
-
     let start_tag = tag_x.print(indent);
     let end_tag = tag_x.print_end(indent);
 

@@ -1,5 +1,4 @@
 extern crate ansi_term;
-extern crate getopts;
 
 use std;
 use std::result::Result;
@@ -64,10 +63,6 @@ pub fn log(level: &LogLevel, content: &str) -> String {
 
 pub fn log_print(level: &LogLevel, content: &str) {
     println!("{}", log(level, content));
-}
-
-pub fn repeat_char(c: char, times: usize) -> String {
-    std::iter::repeat(c).take(times).collect::<String>()
 }
 
 pub fn print_usage(program: &str, opts: &Options) {
