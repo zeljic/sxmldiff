@@ -1,10 +1,10 @@
+extern crate ansi_term;
 extern crate getopts;
 extern crate xmltree;
-extern crate ansi_term;
 
 mod utils;
 
-use getopts::{Options, Matches};
+use getopts::{Matches, Options};
 use std::env;
 use xmltree::Element;
 use ansi_term::Color;
@@ -104,10 +104,12 @@ impl<'tag> Tag<'tag> {
     }
 
     fn print_diff(&self, indent: &usize) -> String {
-        format!("{}{}\n{}",
-                Color::Green.paint("|"),
-                &self.print(&if *indent > 0 { *indent - 1 } else { 0 }),
-                Color::Red.paint("|"))
+        format!(
+            "{}{}\n{}",
+            Color::Green.paint("|"),
+            &self.print(&if *indent > 0 { *indent - 1 } else { 0 }),
+            Color::Red.paint("|")
+        )
     }
 }
 
