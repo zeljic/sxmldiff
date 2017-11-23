@@ -7,13 +7,17 @@ cache:
 
 rust:
   - stable
+  - beta
   - nightly
 
 os:
   - linux
-
-dist: trusty
+  - osx
 
 script:
   - cargo build --release --verbose
-  
+
+matrix:
+  allow_failures:
+     - rust: beta
+     - rust: nightly
