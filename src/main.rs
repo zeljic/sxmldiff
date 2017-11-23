@@ -1,4 +1,4 @@
-extern crate ansi_term;
+extern crate colored;
 extern crate getopts;
 extern crate xmltree;
 
@@ -7,7 +7,7 @@ mod utils;
 use getopts::{Matches, Options};
 use std::env;
 use xmltree::Element;
-use ansi_term::Color;
+use colored::*;
 
 use utils::{log_print, LogLevel};
 
@@ -56,7 +56,7 @@ impl<'tag> PartialEq for Tag<'tag> {
 impl<'tag> Tag<'tag> {
     fn new(el: &'tag Element) -> Tag<'tag> {
         let mut ret_val: Tag<'tag> = Tag {
-            el: el,
+            el,
             attrs: Vec::new(),
         };
 
@@ -106,9 +106,9 @@ impl<'tag> Tag<'tag> {
     fn print_diff(&self, indent: &usize) -> String {
         format!(
             "{}{}\n{}",
-            Color::Green.paint("|"),
+            "|".green(),
             &self.print(&if *indent > 0 { *indent - 1 } else { 0 }),
-            Color::Red.paint("|")
+            "|".red()
         )
     }
 }

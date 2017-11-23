@@ -1,10 +1,11 @@
-extern crate ansi_term;
+extern crate colored;
 
 use std;
 use std::result::Result;
 use std::fs::OpenOptions;
 use std::io::prelude::Read;
 use getopts::Options;
+use colored::*;
 
 #[derive(Debug)]
 pub enum UtilsErrors {
@@ -51,13 +52,13 @@ pub enum LogLevel {
 }
 
 pub fn log(level: &LogLevel, content: &str) -> String {
-    let prefix = match *level {
-        LogLevel::INFO => ansi_term::Colour::White.paint("[INFO]"),
-        LogLevel::WARNING => ansi_term::Colour::Yellow.paint("[WARNING]"),
-        LogLevel::ERROR => ansi_term::Colour::Red.paint("[ERROR]"),
+    let prefix: ColoredString = match *level {
+        LogLevel::INFO => "[INFO]".white(),
+        LogLevel::WARNING => "[WARNING]".yellow(),
+        LogLevel::ERROR => "[ERROR]".red(),
     };
 
-    format!("{} {}", &prefix, content)
+    format!("{} {}", &prefix.to_string().as_str(), content)
 }
 
 pub fn log_print(level: &LogLevel, content: &str) {
