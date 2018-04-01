@@ -1,19 +1,18 @@
+#[macro_use]
+extern crate clap;
 extern crate colored;
-extern crate getopts;
 extern crate xmltree;
 
 mod utils;
 
-use std::{
-    env,
-    cmp::{Ord, Ordering}
-};
+use std::cmp::{Ord, Ordering};
 
 use colored::*;
-use getopts::{Matches, Options};
 use xmltree::Element;
 
 use utils::{log_print, LogLevel};
+
+use clap::{App, Arg};
 
 #[derive(Debug, Eq, PartialEq, PartialOrd)]
 struct Attr<'attr> {
@@ -152,33 +151,18 @@ fn compare_nodes<'cn>(tag_x: &Tag<'cn>, tag_y: &Tag<'cn>, indent: &'cn mut usize
 }
 
 fn main() {
-    let args: Vec<String> = env::args().collect();
-    let program: String = args[0].clone();
+    let args = App::new(crate_name!())
+        .version(crate_version!())
+        .author(crate_authors!())
+        .about(crate_description!())
+        .arg(Arg::with_name("FILE1").required(true).index(1))
+        .arg(Arg::with_name("FILE2").required(true).index(2))
+        .get_matches();
 
-    let mut opts: Options = Options::new();
-    opts.optopt("h", "help", "Show help page", "");
-    //opts.optopt("f", "output-file", "Save result to file", "");
-    //opts.optopt("v", "version", "Show version", "");
+    let file1_path: String = value_t_or_exit!(args.value_of("FILE1"), String);
+    let file2_path: String = value_t_or_exit!(args.value_of("FILE2"), String);
 
-    let matches: Matches = match opts.parse(&args[1..]) {
-        Ok(v) => v,
-        Err(_) => {
-            utils::print_usage(&program, &opts);
-            return;
-        }
-    };
-
-    if matches.opt_present("h") {
-        utils::print_usage(&program, &opts);
-        return;
-    }
-
-    if matches.free.len() < 2 {
-        utils::print_usage(&program, &opts);
-        return;
-    }
-
-    let content_x: String = match utils::read_file_content(&matches.free[0]) {
+    let content_x: String = match utils::read_file_content(&file1_path) {
         Ok(v) => v,
         Err(e) => {
             println!("{}", e);
@@ -186,7 +170,7 @@ fn main() {
         }
     };
 
-    let content_y: String = match utils::read_file_content(&matches.free[1]) {
+    let content_y: String = match utils::read_file_content(&file2_path) {
         Ok(v) => v,
         Err(e) => {
             println!("{}", e);

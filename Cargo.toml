@@ -1,10 +1,10 @@
 [package]
 name = "sxmldiff"
-version = "0.1.0"
+version = "0.2.0"
 authors = ["Đorđe Zeljić <zeljic@gmail.com>"]
 description = "Simple XML comparison tool."
 
 [dependencies]
-getopts = "0.2.17"
 xmltree = "0.8.0"
 colored = "1.6.0"
+clap = "2.31.2"

@@ -1,14 +1,8 @@
 extern crate colored;
 
 use colored::*;
-use getopts::Options;
 
-use std::{
-    self,
-    fs::OpenOptions,
-    io::prelude::Read,
-    result::Result,
-};
+use std::{self, fs::OpenOptions, io::prelude::Read, result::Result};
 
 #[derive(Debug)]
 pub enum UtilsErrors {
@@ -66,9 +60,4 @@ pub fn log(level: &LogLevel, content: &str) -> String {
 
 pub fn log_print(level: &LogLevel, content: &str) {
     println!("{}", log(level, content));
-}
-
-pub fn print_usage(program: &str, opts: &Options) {
-    let brief = format!("Usage: {} FILE1 FILE2 [options]", program);
-    print!("{}", opts.usage(&brief));
 }
