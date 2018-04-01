@@ -4,14 +4,16 @@ extern crate xmltree;
 
 mod utils;
 
-use getopts::{Matches, Options};
-use std::env;
-use xmltree::Element;
+use std::{
+    env,
+    cmp::{Ord, Ordering}
+};
+
 use colored::*;
+use getopts::{Matches, Options};
+use xmltree::Element;
 
 use utils::{log_print, LogLevel};
-
-use std::cmp::{Ord, Ordering};
 
 #[derive(Debug, Eq, PartialEq, PartialOrd)]
 struct Attr<'attr> {
@@ -100,7 +102,7 @@ impl<'tag> Tag<'tag> {
     }
 
     fn has_text(&self) -> bool {
-        !self.el.text.is_none()
+        self.el.text.is_some()
     }
 
     fn print_diff(&self, indent: &usize) -> String {

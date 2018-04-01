@@ -1,11 +1,14 @@
 extern crate colored;
 
-use std;
-use std::result::Result;
-use std::fs::OpenOptions;
-use std::io::prelude::Read;
-use getopts::Options;
 use colored::*;
+use getopts::Options;
+
+use std::{
+    self,
+    fs::OpenOptions,
+    io::prelude::Read,
+    result::Result,
+};
 
 #[derive(Debug)]
 pub enum UtilsErrors {
