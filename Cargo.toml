@@ -3,8 +3,9 @@ name = "sxmldiff"
 version = "0.2.0"
 authors = ["Đorđe Zeljić <zeljic@gmail.com>"]
 description = "Simple XML comparison tool."
+edition = "2018"
 
 [dependencies]
 xmltree = "0.8.0"
-colored = "1.6.0"
-clap = "2.31.2"
+colored = "1.6.1"
+clap = "2.32.0"

@@ -10,7 +10,7 @@ use std::cmp::{Ord, Ordering};
 use colored::*;
 use xmltree::Element;
 
-use utils::{log_print, LogLevel};
+use crate::utils::{log_print, LogLevel};
 
 use clap::{App, Arg};
 
