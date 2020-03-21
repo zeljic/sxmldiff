@@ -6,6 +6,6 @@ description = "Simple XML comparison tool."
 edition = "2018"
 
 [dependencies]
-xmltree = "0.8.0"
-colored = "1.6.1"
-clap = "2.32.0"
+xmltree = "0.10.0"
+colored = "1.9.3"
+clap = "2.33.0"

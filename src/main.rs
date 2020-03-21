@@ -47,8 +47,8 @@ struct Tag<'tag> {
 
 impl<'tag> PartialEq for Tag<'tag> {
     fn eq(&self, rhs: &Tag<'tag>) -> bool {
-        match self.el.text {
-            Some(_) => self.el.text == rhs.el.text,
+        match self.el.get_text() {
+            Some(_) => self.el.get_text() == rhs.el.get_text(),
             None => self.el.name == rhs.el.name && self.attrs == rhs.attrs,
         }
     }
@@ -84,7 +84,7 @@ impl<'tag> Tag<'tag> {
 
         ret_val.push_str(">");
 
-        if let Some(ref text) = self.el.text {
+        if let Some(ref text) = self.el.get_text() {
             ret_val.push_str(text);
             ret_val.push_str(&format!("</{}>", self.el.name));
         }
@@ -101,7 +101,7 @@ impl<'tag> Tag<'tag> {
     }
 
     fn has_text(&self) -> bool {
-        self.el.text.is_some()
+        self.el.get_text().is_some()
     }
 
     fn print_diff(&self, indent: &usize) -> String {
@@ -123,11 +123,11 @@ fn compare_nodes<'cn>(tag_x: &Tag<'cn>, tag_y: &Tag<'cn>, indent: &'cn mut usize
     println!("{}", start_tag);
 
     for child_x in &tag_x.el.children {
-        let tag_child_x: Tag = Tag::new(child_x);
+        let tag_child_x: Tag = Tag::new(child_x.as_element().unwrap());
         let mut found: bool = false;
 
         for child_y in &tag_y.el.children {
-            let tag_child_y: Tag = Tag::new(child_y);
+            let tag_child_y: Tag = Tag::new(child_y.as_element().unwrap());
 
             if tag_child_x == tag_child_y {
                 found = true;
