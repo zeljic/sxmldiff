@@ -71,8 +71,8 @@ impl<'tag> Tag<'tag> {
         ret_val
     }
 
-    fn print(&self, indent: &usize) -> String {
-        let mut ret_val: String = " ".repeat(*indent);
+    fn print(&self, indent: usize) -> String {
+        let mut ret_val: String = " ".repeat(indent);
         ret_val.push('<');
 
         ret_val.push_str(&self.el.name);
@@ -92,9 +92,9 @@ impl<'tag> Tag<'tag> {
         ret_val
     }
 
-    fn print_end(&self, indent: &usize) -> Option<String> {
+    fn print_end(&self, indent: usize) -> Option<String> {
         if !self.has_text() {
-            Some(format!("{}</{}>", " ".repeat(*indent), self.el.name))
+            Some(format!("{}</{}>", " ".repeat(indent), self.el.name))
         } else {
             None
         }
@@ -104,19 +104,19 @@ impl<'tag> Tag<'tag> {
         self.el.get_text().is_some()
     }
 
-    fn print_diff(&self, indent: &usize) -> String {
+    fn print_diff(&self, indent: usize) -> String {
         format!(
             "{}{}\n{}",
             "|".green(),
-            &self.print(&if *indent > 0 { *indent - 1 } else { 0 }),
+            &self.print(if indent > 0 { indent - 1 } else { 0 }),
             "|".red()
         )
     }
 }
 
 fn compare_nodes<'cn>(tag_x: &Tag<'cn>, tag_y: &Tag<'cn>, indent: &'cn mut usize) {
-    let start_tag = tag_x.print(indent);
-    let end_tag = tag_x.print_end(indent);
+    let start_tag = tag_x.print(*indent);
+    let end_tag = tag_x.print_end(*indent);
 
     *indent += 2;
 
@@ -139,7 +139,7 @@ fn compare_nodes<'cn>(tag_x: &Tag<'cn>, tag_y: &Tag<'cn>, indent: &'cn mut usize
         }
 
         if !found {
-            println!("{}", tag_child_x.print_diff(indent));
+            println!("{}", tag_child_x.print_diff(*indent));
         }
     }
 
@@ -201,6 +201,6 @@ fn main() {
     if tag_x == tag_y {
         compare_nodes(&tag_x, &tag_y, &mut indent);
     } else {
-        tag_x.print_diff(&indent);
+        tag_x.print_diff(indent);
     }
 }
