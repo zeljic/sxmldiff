@@ -14,8 +14,8 @@ pub enum UtilsErrors {
 impl std::fmt::Display for UtilsErrors {
 	fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
 		match *self {
-			UtilsErrors::IoOpen(ref path) => write!(f, "{}", log(&LogLevel::ERROR, &format!("Unable to open file {}", path))),
-			UtilsErrors::IoRead(ref path) => write!(f, "{}", log(&LogLevel::ERROR, &format!("Unable to read file {}", path))),
+			UtilsErrors::IoOpen(ref path) => write!(f, "{}", log(&LogLevel::Error, &format!("Unable to open file {}", path))),
+			UtilsErrors::IoRead(ref path) => write!(f, "{}", log(&LogLevel::Error, &format!("Unable to read file {}", path))),
 		}
 	}
 }
@@ -36,16 +36,16 @@ pub fn read_file_content(path: &str) -> Result<String, UtilsErrors> {
 
 #[derive(Debug)]
 pub enum LogLevel {
-	INFO,
-	WARNING,
-	ERROR,
+	Info,
+	Warning,
+	Error,
 }
 
 pub fn log(level: &LogLevel, content: &str) -> String {
 	let prefix: ColoredString = match *level {
-		LogLevel::INFO => "[INFO]".white(),
-		LogLevel::WARNING => "[WARNING]".yellow(),
-		LogLevel::ERROR => "[ERROR]".red(),
+		LogLevel::Info => "[INFO]".white(),
+		LogLevel::Warning => "[WARNING]".yellow(),
+		LogLevel::Error => "[ERROR]".red(),
 	};
 
 	format!("{} {}", &prefix.to_string().as_str(), content)

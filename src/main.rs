@@ -79,7 +79,7 @@ impl<'tag> Tag<'tag> {
 			ret_val.push_str(&attr.print());
 		}
 
-		ret_val.push_str(">");
+		ret_val.push('>');
 
 		if let Some(ref text) = self.el.get_text() {
 			ret_val.push_str(text);
@@ -178,7 +178,7 @@ fn main() {
 	let el_x: Element = match Element::parse(content_x.as_bytes()) {
 		Ok(el) => el,
 		Err(_) => {
-			log_print(&LogLevel::ERROR, "Unable to parse XML document.");
+			log_print(&LogLevel::Error, "Unable to parse XML document.");
 			return;
 		}
 	};
@@ -186,7 +186,7 @@ fn main() {
 	let el_y: Element = match Element::parse(content_y.as_bytes()) {
 		Ok(el) => el,
 		Err(_) => {
-			log_print(&LogLevel::ERROR, "Unable to parse XML document.");
+			log_print(&LogLevel::Error, "Unable to parse XML document.");
 			return;
 		}
 	};
